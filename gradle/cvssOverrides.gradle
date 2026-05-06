@@ -1,0 +1,8 @@
+ext.cveOverride = [:]
+
+cveOverride = [
+  'com.google.protobuf:protobuf-java:3.19.3'  : [
+    useVersion: '3.21.7',
+    because   : 'CVE-2022-3171'
+  ]
+]
