@@ -1,6 +1,7 @@
 package ch.redpill.refactoring;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,7 +10,7 @@ public class RoundFileWriter {
 	private final List<Round> rounds;
 
 	public RoundFileWriter(List<Round> rounds) {
-		this.rounds = rounds;
+		this.rounds = List.copyOf(rounds);
 	}
 
 	public String writeMagazineFile() {
@@ -21,6 +22,7 @@ public class RoundFileWriter {
 	}
 
 	private String writeFile(final Parcel.Type type) {
+		Objects.requireNonNull(type, "Parcel type must not be null");
 		return rounds.stream()
 				.flatMap(round -> round.customers().stream()
 						.flatMap(customer -> getCustomerParcels(round, customer, type)))
@@ -28,7 +30,7 @@ public class RoundFileWriter {
 	}
 
 	private Stream<String> getCustomerParcels(Round round, Customer customer, Parcel.Type type) {
-		return customer.magazines().stream()
+		return customer.parcels().stream()
 				.filter(matchType(type))
 				.map(parcel -> createBarcodeRecord(round, customer, parcel));
 	}
